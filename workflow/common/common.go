@@ -123,6 +123,8 @@ const (
 	EnvVarInstanceID = "ARGO_INSTANCE_ID"
 	// EnvVarWorkflowName is the name of the workflow for which the an agent is responsible for
 	EnvVarWorkflowName = "ARGO_WORKFLOW_NAME"
+	// EnvVarWorkflowNamespace is the namespace of the workflow for which the an agent is responsible for
+	EnvVarWorkflowNamespace = "ARGO_WORKFLOW_NAMESPACE"
 	// EnvVarWorkflowUID is the workflow UUID
 	EnvVarWorkflowUID = "ARGO_WORKFLOW_UID"
 	// EnvVarNodeID is the node ID of the node.

@@ -103,6 +103,13 @@ func initAgentExecutor() *executor.AgentExecutor {
 	if !ok {
 		log.Fatalf("Unable to determine workflow name from environment variable %s", common.EnvVarWorkflowName)
 	}
+	if namespace == "" {
+		workflowNamespace, ok := os.LookupEnv(common.EnvVarWorkflowNamespace)
+		if !ok {
+			log.Fatalf("Unable to determine workflow namespace from environment variable %s", common.EnvVarWorkflowNamespace)
+		}
+		namespace = workflowNamespace
+	}
 	workflowUID, ok := os.LookupEnv(common.EnvVarWorkflowUID)
 	if !ok {
 		log.Fatalf("Unable to determine workflow Uid from environment variable %s", common.EnvVarWorkflowUID)
