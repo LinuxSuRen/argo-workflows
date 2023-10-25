@@ -11,6 +11,7 @@ import (
 	// load authentication plugin for obtaining credentials from cloud providers.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
+	_ "github.com/apache/skywalking-go"
 	"github.com/argoproj/argo-workflows/v3/cmd/argoexec/commands"
 	"github.com/argoproj/argo-workflows/v3/util"
 )

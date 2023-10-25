@@ -3,6 +3,7 @@ ARG GIT_COMMIT=unknown
 ARG GIT_TAG=unknown
 ARG GIT_TREE_STATE=unknown
 
+FROM ghcr.io/apache/skywalking-go/skywalking-go:74b68861aed04b4d78fcc5b4bcd925113f7de81d-go1.20 as skywalking
 FROM golang:1.21-alpine3.18 as builder
 
 RUN apk update && apk add --no-cache \
@@ -49,6 +50,8 @@ ARG GIT_COMMIT
 ARG GIT_TAG
 ARG GIT_TREE_STATE
 
+COPY --from=skywalking /usr/local/bin/skywalking-go-agent /usr/local/bin/skywalking-go-agent
+
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build make dist/argoexec GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
 ####################################################################################################
@@ -58,6 +61,8 @@ FROM builder as workflow-controller-build
 ARG GIT_COMMIT
 ARG GIT_TAG
 ARG GIT_TREE_STATE
+
+COPY --from=skywalking /usr/local/bin/skywalking-go-agent /usr/local/bin/skywalking-go-agent
 
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build make dist/workflow-controller GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
@@ -71,6 +76,8 @@ ARG GIT_TREE_STATE
 
 RUN mkdir -p ui/dist
 COPY --from=argo-ui ui/dist/app ui/dist/app
+
+COPY --from=skywalking /usr/local/bin/skywalking-go-agent /usr/local/bin/skywalking-go-agent
 
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build STATIC_FILES=true make dist/argo GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
